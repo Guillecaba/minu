@@ -5,6 +5,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from location_field.models.plain import PlainLocationField
 from django.contrib.auth import get_user_model
+from django.template.defaultfilters import slugify
 
 User = get_user_model()
 
@@ -36,6 +37,10 @@ class Restaurant(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Restaurant, self).save(*args, **kwargs)
 
 
 class Menu(models.Model):
@@ -77,6 +82,7 @@ class Lifestyle(models.Model):
     Store a single entry of a type of lifestyle related to :model `restaurant.Dish`
     """
     title = models.CharField(max_length=200, verbose_name=_('title'))
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, verbose_name=_('restaurant'))
 
     class Meta:
         verbose_name = _('lifestyle')
@@ -91,6 +97,7 @@ class Allergen(models.Model):
     Store a single entry of a type of allergen related to :model `restaurant.Dish`
     """
     title = models.CharField(max_length=200, verbose_name=_('title'))
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, verbose_name=_('restaurant'))
 
     class Meta:
         verbose_name = _('allergen')
