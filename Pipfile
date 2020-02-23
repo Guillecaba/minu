@@ -12,6 +12,7 @@ pillow = "*"
 djangorestframework = "*"
 markdown = "*"
 django-filter = "*"
+django-modeltranslation = "*"
 
 [requires]
 python_version = "3.8"

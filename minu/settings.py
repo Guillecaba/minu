@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+    'modeltranslation',
     'location_field.apps.DefaultConfig',
     'restaurant'
 ]
@@ -111,7 +112,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es'
 
 TIME_ZONE = 'UTC'
 
@@ -135,3 +136,12 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 100
 }
+
+gettext = lambda s: s
+LANGUAGES = (
+    ('es', gettext('Spanish')),
+    ('en', gettext('English')),
+    ('pr', gettext('Portuguese')),
+)
+
+MODELTRANSLATION_FALLBACK_LANGUAGES = ('es', 'en', 'pr')

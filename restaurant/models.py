@@ -10,6 +10,35 @@ from django.template.defaultfilters import slugify
 User = get_user_model()
 
 
+class Allergen(models.Model):
+    """
+    Store a single entry of a type of allergen related to :model `restaurant.Dish`
+    """
+    title = models.CharField(max_length=200, verbose_name=_('title'))
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('create at'))
+    updated_at = models.DateTimeField(auto_now=True, verbose_name=_('updated at'))
+
+    class Meta:
+        verbose_name = _('allergen')
+        verbose_name_plural = _('allergens')
+
+
+class Lifestyle(models.Model):
+    """
+    Store a single entry of a type of lifestyle related to :model `restaurant.Dish`
+    """
+    title = models.CharField(max_length=200, verbose_name=_('title'))
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('create at'))
+    updated_at = models.DateTimeField(auto_now=True, verbose_name=_('updated at'))
+
+    class Meta:
+        verbose_name = _('lifestyle')
+        verbose_name_plural = _('lifestyles')
+
+    def __str__(self):
+        return self.title
+
+
 class Restaurant(models.Model):
     """
     Store a single Restaurant entry, related to :model `auth.User`
@@ -30,6 +59,8 @@ class Restaurant(models.Model):
     email = models.EmailField(default='', blank=True, verbose_name=_('email'))
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('create at'))
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_('updated at'))
+    allergens = models.ManyToManyField(Allergen, related_name='restaurants', verbose_name=_('allergens'))
+    lifestyle = models.ManyToManyField(Lifestyle, related_name='restaurants', verbose_name=_('lifestyle'))
 
     class Meta:
         verbose_name = _('restaurant')
@@ -68,6 +99,8 @@ class Category(models.Model):
     """
     title = models.CharField(max_length=200, verbose_name=_('title'))
     menu = models.ManyToManyField(Menu, related_name='categories', verbose_name=_('menu'))
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('create at'))
+    updated_at = models.DateTimeField(auto_now=True, verbose_name=_('updated at'))
 
     class Meta:
         verbose_name = _('category')
@@ -75,33 +108,6 @@ class Category(models.Model):
 
     def __str__(self):
         return self.title
-
-
-class Lifestyle(models.Model):
-    """
-    Store a single entry of a type of lifestyle related to :model `restaurant.Dish`
-    """
-    title = models.CharField(max_length=200, verbose_name=_('title'))
-    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, verbose_name=_('restaurant'))
-
-    class Meta:
-        verbose_name = _('lifestyle')
-        verbose_name_plural = _('lifestyles')
-
-    def __str__(self):
-        return self.title
-
-
-class Allergen(models.Model):
-    """
-    Store a single entry of a type of allergen related to :model `restaurant.Dish`
-    """
-    title = models.CharField(max_length=200, verbose_name=_('title'))
-    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE, verbose_name=_('restaurant'))
-
-    class Meta:
-        verbose_name = _('allergen')
-        verbose_name_plural = _('allergens')
 
 
 class Dish(models.Model):
@@ -114,6 +120,8 @@ class Dish(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name=_('category'))
     lifestyle = models.ManyToManyField(Lifestyle, related_name='dishes', verbose_name=_('lifestyle'))
     allergen = models.ManyToManyField(Allergen, related_name='dishes', verbose_name=_('allergen'))
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('create at'))
+    updated_at = models.DateTimeField(auto_now=True, verbose_name=_('updated at'))
 
     class Meta:
         verbose_name = _('dish')
